@@ -8,7 +8,7 @@ class Tag < ActiveRecord::Base
 
   # case-insensitive like used
   def self.find_or_create_with_like_by_name(name)
-    find(:first, :conditions => ["name LIKE ?", name]) || create(:name => name)
+    find(:first, :conditions => ["name #{ActiveRecord::Base.connection.case_insensitive_like} ?", name]) || create(:name => name)
   end
   
   def ==(object)

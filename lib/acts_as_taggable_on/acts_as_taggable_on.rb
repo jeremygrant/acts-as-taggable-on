@@ -134,10 +134,10 @@ module ActiveRecord
           taggings_alias, tags_alias = "#{table_name}_taggings", "#{table_name}_tags"
 
           if options.delete(:exclude)
-            tags_conditions = tags.map { |t| sanitize_sql(["#{Tag.table_name}.name LIKE ?", t]) }.join(" OR ")
+            tags_conditions = tags.map { |t| sanitize_sql(["#{Tag.table_name}.name #{ActiveRecord::Base.connection.case_insensitive_like} ?", t]) }.join(" OR ")
             conditions << sanitize_sql(["#{table_name}.id NOT IN (SELECT #{Tagging.table_name}.taggable_id FROM #{Tagging.table_name} LEFT OUTER JOIN #{Tag.table_name} ON #{Tagging.table_name}.tag_id = #{Tag.table_name}.id WHERE (#{tags_conditions}) AND #{Tagging.table_name}.taggable_type = #{quote_value(base_class.name)})", tags])
           else
-            conditions << tags.map { |t| sanitize_sql(["#{tags_alias}.name LIKE ?", t]) }.join(" OR ")
+            conditions << tags.map { |t| sanitize_sql(["#{tags_alias}.name #{ActiveRecord::Base.connection.case_insensitive_like} ?", t]) }.join(" OR ")
 
             if options.delete(:match_all)
               group = "#{taggings_alias}.taggable_id HAVING COUNT(#{taggings_alias}.taggable_id) = #{tags.size}"
@@ -198,11 +198,11 @@ module ActiveRecord
             :conditions => conditions,
             :group      => group_by
           }.update(options)
-        end    
+        end
         
         def is_taggable?
           true
-        end                
+        end
       end
     
       module InstanceMethods

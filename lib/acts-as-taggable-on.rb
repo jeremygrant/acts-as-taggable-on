@@ -1,3 +1,4 @@
+require 'acts_as_taggable_on/active_record_extensions.rb'
 require 'acts_as_taggable_on/acts_as_taggable_on'
 require 'acts_as_taggable_on/acts_as_tagger'
 require 'acts_as_taggable_on/tag'
