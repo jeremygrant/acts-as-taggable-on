@@ -78,7 +78,7 @@ module ActiveRecord
               attr_writer :custom_contexts
             
               before_save :save_cached_tag_list
-              after_save :save_tags
+              before_save :save_tags
               
               if respond_to?(:named_scope)
                 named_scope :tagged_with, lambda{ |tags, options|
